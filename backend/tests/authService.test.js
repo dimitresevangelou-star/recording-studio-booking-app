@@ -50,6 +50,40 @@ describe('authService.register', () => {
     expect(user.email).toBe('new@example.com');
     expect(token).toBe('fake-jwt-token');
   });
+
+  it('SECURITY: ignores a client-supplied role of "admin" and registers as artist', async () => {
+    userRepository.findByEmail.mockResolvedValue(null);
+    bcrypt.hash.mockResolvedValue('hashed-password');
+    userRepository.create.mockImplementation((data) => Promise.resolve({ id: 1, ...data }));
+
+    await authService.register({
+      fullName: 'Hacker',
+      email: 'hacker@example.com',
+      password: 'password123',
+      role: 'admin',
+    });
+
+    expect(userRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'artist' })
+    );
+  });
+
+  it('allows self-registration as engineer', async () => {
+    userRepository.findByEmail.mockResolvedValue(null);
+    bcrypt.hash.mockResolvedValue('hashed-password');
+    userRepository.create.mockImplementation((data) => Promise.resolve({ id: 1, ...data }));
+
+    await authService.register({
+      fullName: 'Engineer',
+      email: 'engineer@example.com',
+      password: 'password123',
+      role: 'engineer',
+    });
+
+    expect(userRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'engineer' })
+    );
+  });
 });
 
 describe('authService.login', () => {

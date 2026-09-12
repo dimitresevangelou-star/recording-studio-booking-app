@@ -20,7 +20,7 @@ async function listMyBookings(req, res, next) {
 
 async function listAllBookings(req, res, next) {
   try {
-    const bookings = await bookingService.listAllBookings();
+    const bookings = await bookingService.listAllBookings(req.user);
     res.json(bookings);
   } catch (err) {
     next(err);
@@ -29,11 +29,20 @@ async function listAllBookings(req, res, next) {
 
 async function updateStatus(req, res, next) {
   try {
-    const booking = await bookingService.updateStatus(req.params.id, req.body.status);
+    const booking = await bookingService.updateStatus(req.params.id, req.body.status, req.user);
     res.json(booking);
   } catch (err) {
     next(err);
   }
 }
 
-module.exports = { createBooking, listMyBookings, listAllBookings, updateStatus };
+async function cancelBooking(req, res, next) {
+  try {
+    const booking = await bookingService.cancelOwnBooking(req.params.id, req.user.id);
+    res.json(booking);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { createBooking, listMyBookings, listAllBookings, updateStatus, cancelBooking };

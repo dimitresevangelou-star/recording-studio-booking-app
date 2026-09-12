@@ -19,7 +19,7 @@ const { register, login } = require('../controllers/authController');
  *               fullName: { type: string }
  *               email: { type: string }
  *               password: { type: string }
- *               role: { type: string, enum: [artist, engineer, admin] }
+ *               role: { type: string, enum: [artist, engineer], description: "Defaults to artist. 'admin' can never be self-assigned." }
  *     responses:
  *       201: { description: User created }
  */

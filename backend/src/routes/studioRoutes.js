@@ -43,7 +43,7 @@ router.post('/', authenticate, authorize('engineer', 'admin'), createStudio);
  *     security: [{ bearerAuth: [] }]
  */
 router.get('/:id', getStudio);
-router.put('/:id', authenticate, authorize('engineer', 'admin'), updateStudio);
-router.delete('/:id', authenticate, authorize('engineer', 'admin'), deleteStudio);
+router.put('/:id', authenticate, authorize('engineer'), updateStudio);
+router.delete('/:id', authenticate, authorize('engineer'), deleteStudio);
 
 module.exports = router;

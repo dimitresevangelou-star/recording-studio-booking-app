@@ -41,6 +41,19 @@ class BookingRepository {
     return result.rows;
   }
 
+  async findByEngineer(engineerId) {
+    const result = await pool.query(
+      `SELECT b.*, s.name AS studio_name, u.full_name AS artist_name
+       FROM bookings b
+       JOIN studios s ON b.studio_id = s.id
+       JOIN users u ON b.artist_id = u.id
+       WHERE s.engineer_id = $1
+       ORDER BY b.start_time DESC`,
+      [engineerId]
+    );
+    return result.rows;
+  }
+
   async findById(id) {
     const result = await pool.query('SELECT * FROM bookings WHERE id = $1', [id]);
     return result.rows[0] || null;

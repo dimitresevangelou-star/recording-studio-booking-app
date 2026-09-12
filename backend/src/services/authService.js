@@ -11,12 +11,16 @@ class AuthService {
       throw err;
     }
 
+    // Public registration may only self-assign 'artist' or 'engineer'.
+    // 'admin' (or any other value) is never accepted from the client.
+    const safeRole = role === 'engineer' ? 'engineer' : 'artist';
+
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await userRepository.create({
       fullName,
       email,
       passwordHash,
-      role: role || 'artist',
+      role: safeRole,
     });
 
     const token = this._generateToken(user);

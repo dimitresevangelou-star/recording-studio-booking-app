@@ -6,6 +6,7 @@ const {
   listMyBookings,
   listAllBookings,
   updateStatus,
+  cancelBooking,
 } = require('../controllers/bookingController');
 
 /**
@@ -42,5 +43,15 @@ router.get('/me', authenticate, authorize('artist'), listMyBookings);
  *     security: [{ bearerAuth: [] }]
  */
 router.patch('/:id/status', authenticate, authorize('admin', 'engineer'), updateStatus);
+
+/**
+ * @swagger
+ * /api/bookings/{id}/cancel:
+ *   patch:
+ *     summary: Cancel your own booking (artist)
+ *     tags: [Bookings]
+ *     security: [{ bearerAuth: [] }]
+ */
+router.patch('/:id/cancel', authenticate, authorize('artist'), cancelBooking);
 
 module.exports = router;
